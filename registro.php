@@ -41,6 +41,7 @@
                 mysqli_stmt_close($stmt);
             }
         }
+        //Random comment
 
         $pattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=(.*?\d){2})((?=.*[@#$%&?]){2,})[A-Za-z\d@#$%?]{8,}$/"; 
         //Validar la contraseña
