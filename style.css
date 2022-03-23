@@ -1,0 +1,51 @@
+body{
+    background-image: url("https://media.istockphoto.com/vectors/monochrome-black-and-white-dog-cat-pet-animal-paw-foot-hand-drawn-ink-vector-id1011583734?k=20&m=1011583734&s=612x612&w=0&h=3Y-PQ0LuMRsvDvqZu5iFGelhoqnIacjVEU5kAaAqhGc=");
+}
+
+header{
+    text-align: center;
+    color: white;
+}
+
+.login-container, .registro-container, .boton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-sub-container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.registro-sub-container {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login-sub-container h3, .registro-sub-container h3, .smalling{
+    text-align: center;
+}
+
+.botones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-triple {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+}
+
+.imagen-result {
+    width: 50%;
+    border-radius: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
