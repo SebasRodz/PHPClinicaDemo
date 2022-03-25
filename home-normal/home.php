@@ -3,11 +3,11 @@
     session_start();
 
     // Conexión a la base de datos
-    include("connection.php");
+    include("../connection.php");
     
     // Revisa si un usuario esta logueado, siendo el caso, lo redirige al login
     if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-        header("location: login.php");
+        header("location: ../login.php");
         exit;
     }
 ?>
@@ -18,7 +18,7 @@
     <meta charset="UTF-8">
     <title>Home</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cosmo/bootstrap.min.css" integrity="sha384-5QFXyVb+lrCzdN228VS3HmzpiE7ZVwLQtkt+0d9W43LQMzz4HBnnqvVxKg6O+04d" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <header class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -57,6 +57,6 @@
 		integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
 		crossorigin="anonymous">
     </script>
-    <script src="script2.js"></script>
+    <script src="script-normal.js"></script>
 </body>
 </html>

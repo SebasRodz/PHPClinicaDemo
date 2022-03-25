@@ -3,7 +3,7 @@
     session_start();
 
     // Conenctando a la base de datos
-    include("connection.php");
+    include("../connection.php");
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Definiendo las variables y la id de la sesión
@@ -35,7 +35,7 @@
     <meta charset="UTF-8">
     <title>Home</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cosmo/bootstrap.min.css" integrity="sha384-5QFXyVb+lrCzdN228VS3HmzpiE7ZVwLQtkt+0d9W43LQMzz4HBnnqvVxKg6O+04d" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <header class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -108,6 +108,6 @@
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous">
     </script>
-    <script src="script.js"></script>
+    <script src="script-registro.js"></script>
 </body>
 </html>

@@ -4,8 +4,20 @@ session_start();
  
 // Revisa si un usuario esta logueado, siendo el caso, lo redirige al home
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    header("location: home.php");
-    exit;
+    switch ($_SESSION["id_type"]) {
+        case 1:
+            header("location: home-admin/homeadmin.php");
+            break;
+        case 2:
+            header("location: home-doctor/homedoctor.php");
+            break;
+        case 3:
+            header("location: home-normal/home.php");
+            break;
+        default:
+            header("login.php");
+            break;
+    }
 }
 
 include("connection.php");
@@ -34,7 +46,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validando credenciales
     if(empty($username_err) && empty($password_err)){
         // Preparando la consulta SELECT
-        $sql = "SELECT id, username, password FROM users WHERE username = ?";
+        $sql = "SELECT id, username, id_type, password FROM users WHERE username = ?";
         
         if($stmt = mysqli_prepare($db, $sql)){
             // Vincular variables a la declaración preparada como parámetros
@@ -51,7 +63,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Verifica si existe el usuario, siendo asi, la contraseña
                 if(mysqli_stmt_num_rows($stmt) == 1){                    
                     // Vincula las variables resultantes
-                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
+                    mysqli_stmt_bind_result($stmt, $id, $username, $user_type, $hashed_password);
                     if(mysqli_stmt_fetch($stmt)){
                         if(password_verify($password, $hashed_password)){
                             // Si la contraseña es correcta, empieza una nueva sesión
@@ -60,10 +72,25 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             // Guarda la sesión en variables
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
+                            $_SESSION["username"] = $username; 
+                            $_SESSION["id_type"] = $user_type;                          
+
+                            // Redirecciona al dependiendo del tipo de usuario
+                            switch ($user_type) {
+                                case 1:
+                                    header("location: home-admin/homeadmin.php");
+                                    break;
+                                case 2:
+                                    header("location: home-doctor/homedoctor.php");
+                                    break;
+                                case 3:
+                                    header("location: home-normal/home.php");
+                                    break;
+                                default:
+                                    header("login.php");
+                                    break;
+                            }
                             
-                            // Redirecciona al home
-                            header("location: home.php");
                         } else{
                             // Si la contraseña no es valida, manda el siguiente mensaje
                             $login_err = "Usuario o contraseña invalidos.";
@@ -136,6 +163,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 </div>
             </div>	
         </div>
-        <script src="script.js"></script>
    </body>
 </html>

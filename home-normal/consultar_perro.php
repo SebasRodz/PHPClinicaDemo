@@ -3,7 +3,7 @@
     session_start();
 
     // Conexión a la base de datos
-    include("connection.php");
+    include("../connection.php");
     
     if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $id = $_SESSION["id"];

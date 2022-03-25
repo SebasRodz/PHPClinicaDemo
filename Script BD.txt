@@ -19,3 +19,15 @@ CREATE TABLE perro (
     foto VARCHAR(255) NOT NULL,
     FOREIGN KEY (id_user) REFERENCES users(id)
 );
+
+CREATE TABLE perroconsultado (
+    id_perro INT NOT NULL,
+    id_user int NOT NULL,
+    sintomas VARCHAR(250) NOT NULL,
+    rayosx VARCHAR(255) NOT NULL,
+    prueba_sangre VARCHAR(255) NOT NULL,
+    medicina VARCHAR(255) NOT NULL,
+    costo INT NOT NULL,
+    FOREIGN KEY (id_perro) REFERENCES perro(id),
+    FOREIGN KEY (id_user) REFERENCES users(id)
+);

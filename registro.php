@@ -70,15 +70,16 @@
         if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
             
             // Preparando la declaración INSERT
-            $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+            $sql = "INSERT INTO users (username, password, id_type) VALUES (?, ?, ?)";
              
             if($stmt = mysqli_prepare($db, $sql)){
                 // Vincular variables a la declaración preparada como parámetros
-                mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
+                mysqli_stmt_bind_param($stmt, "sss", $param_username, $param_password, $param_type);
                 
                 // Declarar parametros
                 $param_username = $username;
                 $param_password = password_hash($password, PASSWORD_DEFAULT); // Crea un hash en la contraseña
+                $param_type = 3;
                 
                 // Definiciones al ejecutar la declaración preparadas
                 if(mysqli_stmt_execute($stmt)){
