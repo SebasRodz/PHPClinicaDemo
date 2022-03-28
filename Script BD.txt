@@ -20,7 +20,8 @@ CREATE TABLE perro (
     FOREIGN KEY (id_user) REFERENCES users(id)
 );
 
-CREATE TABLE perroconsultado (
+CREATE TABLE perro_consulta (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     id_perro INT NOT NULL,
     id_user int NOT NULL,
     sintomas VARCHAR(250) NOT NULL,

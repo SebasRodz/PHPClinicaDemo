@@ -3,7 +3,7 @@ $(document).ready(function() {
     ajaxFunction();
 
     function ajaxFunction() {
-        const url = "ver-consulta.php";
+        const url = "listar-todo.php";
 
         $.ajax({
             url: url,
@@ -19,8 +19,6 @@ $(document).ready(function() {
                         perros = [];
                     } else {
                         let response_parse = JSON.parse(response);
-                        let n;
-                        perros = [];
                         for (var k in response_parse) {
                             template += '<div class="card mb-3"><div class = "card-header">' +
                                         '<h5 class="pt-2" style="float: left;">Mascota con id ' + response_parse[k].id + '</h5>' +
@@ -52,7 +50,7 @@ $(document).ready(function() {
     }
 
     $(document).on ('click', '.consulta', (e) => {
-        if(confirm('¿Estas seguro de eliminar la mascota?')) {
+        if(confirm('¿Estas seguro de pbservar la consulta?')) {
             const element = $(this)[0].activeElement
             const id = $(element).attr("value");
             const name = $(element).attr("name");

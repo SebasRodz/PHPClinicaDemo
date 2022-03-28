@@ -25,15 +25,21 @@ $(document).ready(function() {
                             n = parseInt(k);
                             n += 1;
                             template += '<div class="card mb-3"><div class = "card-header">' +
-                                        '<h5 class="pt-2" style="float: left;">Mascota Numero ' + n + '</h5>' +
-                                        '<button id="' + response_parse[k].id + '" type="button" class="obtener btn btn-danger" style="float: right;">X</button></div>' +
+                                        '<h5 class="pt-2" style="float: left;">Mascota Numero ' + n + '</h5></div>' +
                                         '<div class = "card-body">';
                             template += '<label class="form-label"> Nombre: ' + response_parse[k].nombre + '</label><br>' +
                                     '<label class="form-label"> Raza: ' + response_parse[k].raza + '</label><br>' +
                                     '<label class="form-label"> Genero: ' + response_parse[k].genero + '</label><br>' +
                                     '<label class="form-label"> Fecha de Nacimiento: ' + response_parse[k].fechanac + '</label><br>' +
-                                    '<img class="imagen-result mt-2" src="' + response_parse[k].foto + '" alt="Imagen no disponible"><br><br>';
+                                    '<img class="imagen-result mt-2" src="' + response_parse[k].foto + '" alt="Imagen no disponible"><br>';
                                     // '<label class="form-label">' + response_parse[k].Foto + '</label>';
+                            if (response_parse[k].consulta == 1) {
+                                template += '<div class = "botones mt-1">' + 
+                                            '<button value="' + response_parse[k].id + '" name = "' + response_parse[k].nombre + '" type="button" class="consulta btn btn-primary">Comprobar Consulta</button></div>';
+                            } else {
+                                template += '<div class = "botones mt-1">' + 
+                                            '<button type="button" class="btn btn-primary disabled">Sin Consulta</button></div>';
+                            }
                             template += '</div></div>';
                         }           
                         $("#grid-triple").html(template);
@@ -44,31 +50,6 @@ $(document).ready(function() {
             }
         })
     }
-
-    $(document).on ('click', '.obtener', (e) => {
-        if(confirm('¿Estas seguro de eliminar la mascota?')) {
-            const element = $(this)[0].activeElement
-            const id = $(element).attr("id");
-            // console.log(id);
-            const postData = {
-                id: id
-            };
-            const url = 'eliminar_perro.php';
-            $.ajax({
-                url: url,
-                data: postData,
-                type: 'POST',
-                success: function(response) {
-                    if(!response.error) {
-                        alert("Mascota eliminada");
-                        ajaxfunctions();
-                    } else {
-                        alert(response);
-                    }
-                }
-            })
-        }
-    })
 
     $(document).on ('click', '#boton-registrar', (e) => {
         const grid = $(".grid-triple");
@@ -87,7 +68,30 @@ $(document).ready(function() {
         }
     })
 
+    $(document).on ('click', '.consulta', (e) => {
+        const element = $(this)[0].activeElement
+        const id = $(element).attr("value");
+        const name = $(element).attr("name");
+        const postData = {
+            perro_id: id,
+            perro_nombre: name
+        };
+        const url = '../home-doctor/localizar_perro.php';
+        $.ajax({
+            url: url,
+            data: postData,
+            type: 'POST',
+            success: function(response) {
+                if(!response.error) {
+                    $(location).attr('href','comprobar-consulta.php');
+                } else {
+                    alert(response);
+                }
+            }
+        })
+    })
+
     $("#cerrar-sesion").click(e => {
-        $(location).attr('href','logout.php');
+        $(location).attr('href','../logout.php');
     })
 })

@@ -5,25 +5,73 @@
     // Conenctando a la base de datos
     include("../connection.php");
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Definiendo las variables y la id de la sesión
-        $v1 = $_POST['nombre'];
-        $v2 = $_POST['raza'];
-        $v3 = $_POST['genero'];
-        $v4 = $_POST['fecha'];
-        $v5 = $_POST['imagen'];
+    //Definiendo variables
+    $nombre = $fecha = $imagen = "";
+    $nombre_err = $fecha_err = $imagen_err = "";
 
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Validando nombre
+        if (empty (trim ($_POST["nombre"]))) {
+            $nombre_err = "Porfavor, ingrese un nombre.";
+        } elseif (!preg_match('/^[A-Z][A-Za-z]{2,254}$/', trim($_POST['nombre']))) {
+            $nombre_err = "El nombre empieza con mayuscula y no puede tener numeros.";
+        } else {
+            $nombre = trim($_POST["nombre"]);
+        }
+
+        // Validando fecha
+        if (empty (trim ($_POST["fecha"]))) {
+            $fecha_err = "Porfavor, ingrese una fecha.";
+        } else {
+            $fecha = $_POST["fecha"];
+        }
+
+        // Validando imagen
+        if (empty (trim ($_POST["imagen"]))) {
+            $imagen_err = "Porfavor, ingrese un enlace.";
+        } else {
+            $imagen = trim($_POST["imagen"]);
+        }
+
+        // Definiendo las demas variables
+        $raza = $_POST['raza'];
+        $genero = $_POST['genero'];
+
+        // Definiendo el id de la sesion
         $id = $_SESSION["id"];
 
-        // Consulta SQL para agregar la mascota
-        $sql = "INSERT INTO Perro (id_user, nombre, raza, genero, fechanac, foto) ";
-        $sql .= "VALUES ('$id', '$v1', '$v2', '$v3', '$v4', '$v5')";
-        
-        // Resultado en caso de error
-        if (!(mysqli_query($db, $sql))) {
-            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-        } 
-        
+        // Determinar errores en los inputs antes de entrar en la base de datos
+        if(empty($nombre_err) && empty($fecha_err) && empty($imagen_err)){
+            
+            // Preparando la declaración INSERT
+            // $sql = "INSERT INTO users (username, password, id_type) VALUES (?, ?, ?)";
+            $sql = "INSERT INTO perro (id_user, nombre, raza, genero, fechanac, foto, consulta) VALUES (?,?,?,?,?,?,?)";
+             
+            if($stmt = mysqli_prepare($db, $sql)){
+                // Vincular variables a la declaración preparada como parámetros
+                mysqli_stmt_bind_param($stmt, "sssssss", $param_id, $param_nombre, $param_raza, $param_genero, $param_fecha, $param_imagen, $consulta);
+                
+                // Declarar parametros
+                $param_id = $id;
+                $param_nombre = $nombre;
+                $param_raza = $raza;
+                $param_genero = $genero;
+                $param_fecha = $fecha;
+                $param_imagen = $imagen;
+                $consulta = 0;
+                
+                // Definiciones al ejecutar la declaración preparadas
+                if(mysqli_stmt_execute($stmt)){
+                    // Redirect to login page
+                    header("location: home.php");
+                } else{
+                    echo "Algo salio mal, Intentalo luego.";
+                }
+    
+                // Cerra declaracion
+                mysqli_stmt_close($stmt);
+            }
+        }
         // Close conexión
         mysqli_close($db);
     }
@@ -46,12 +94,30 @@
             <h3 style="text-align: center;">Registro de Perro</h3>
         </div>
         <div class="card-body">
-            <form id="form-ingreso" class="form-group" action="registrar_perro.php" method="POST">                        
+            <form action = "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" id="form-ingreso" class="form-group" method="POST">                        
                 <label class="form-label">Ingresar Nombre:</label>
-                <input id="nombre" name="nombre" type="text" class="form-control" placeholder="Escribe el nombre">
+                <input 
+                    value="<?php echo $nombre; ?>" 
+                    id="nombre" 
+                    name="nombre" 
+                    type="text" 
+                    class="form-control <?php echo (!empty($nombre_err)) ? 'is-invalid' : ''; ?>" 
+                    placeholder="Escribe el nombre">
+                <span class="invalid-feedback">
+                    <?php echo $nombre_err; ?>
+                </span>
                         
                 <label class="form-label mt-3">Fecha de Nacimiento:</label>
-                <input id="fecha" name= "fecha" type = "date" class="form-control">
+                <input 
+                    value="<?php echo $fecha; ?>" 
+                    id="fecha" 
+                    name= "fecha" 
+                    type = "date" 
+                    class="form-control <?php echo (!empty($fecha_err)) ? 'is-invalid' : ''; ?>" 
+                    placeholder="Ingresa URL">
+                <span class="invalid-feedback">
+                    <?php echo $fecha_err; ?>
+                </span>
                         
                 <label class="form-label mt-3">Genero:</label> 
                 <div class="form-check">
@@ -81,25 +147,22 @@
                 <br>
                 
                 <label class="form-label mt-3">Imagen:</label> 
-                <input id="imagen" class="form-control" name="imagen" type="text">
+                <input 
+                    value="<?php echo $imagen;?>" 
+                    id="imagen" 
+                    class="form-control <?php echo (!empty($imagen_err)) ? 'is-invalid' : ''; ?>" 
+                    name="imagen" 
+                    type="text">
+                <span class="invalid-feedback">
+                    <?php echo $imagen_err; ?>
+                </span>
             
                 <div class = "botones mt-3">        
-                    <!-- <div class="boton">
-                        <input class="btn btn-lg btn-primary" name= "Registrar" type = Submit value = "Registrar">
-                    </div> -->
-                    <div>
-                        <button id="boton-registrar" type="button" class="btn btn-primary">
-                            Registrar
-                        </button>
-                    </div>
-                    <div>
-                        <button id="boton-cancelar" type="button" class="btn btn-secondary ml-3">
-                            Cancelar
-                        </button>
-                    </div>
+                    <input class="btn btn-primary ml-3" type = "submit" value = "Registrar Perro">
+                    <button id="boton-cancelar" type="button" class="btn btn-secondary ml-3">
+                        Cancelar
+                    </button>
                 </div>    
-
-                <div class="response"></div>
             </form>
         </div>
     </div>

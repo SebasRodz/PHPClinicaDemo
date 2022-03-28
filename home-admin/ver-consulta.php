@@ -11,7 +11,7 @@
         // Validando credenciales
         if(!empty($id)){
             // Preparando la consulta SELECT
-            $sql = "SELECT sintomas, rayosx, prueba_sangre, medicina, costo FROM perroconsultado WHERE id_perro = ".$id;
+            $sql = "SELECT * FROM perro_consulta WHERE id_perro = ".$id;
             
             if($stmt = mysqli_prepare($db, $sql)){
                 // Intento de ejecutar la declaración preparada

@@ -5,30 +5,88 @@
     // Conenctando a la base de datos
     include("../connection.php");
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Definiendo las variables y la id de la sesión
-        $v1 = $_POST['sintomas'];
-        $v2 = $_POST['rayos'];
-        $v3 = $_POST['diagnostico'];
-        $v4 = $_POST['medicina'];
-        $v5 = $_POST['costo'];
+    //Definiendo variables
+    $sintomas = $diagnostico = $medicina = $rayos = "";
+    $sintomas_err = $diagnostico_err = $medicina_err = $rayos_err = "";
 
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Validando sintomas
+        if (empty (trim ($_POST["sintomas"]))) {
+            $sintomas_err = "Porfavor, ingrese los sintomas.";
+        } elseif (!preg_match('/^[A-Za-z,. ]{30,254}$/', trim($_POST['sintomas']))) {
+            $sintomas_err = "Se debe detallar con minimo 30 caracteres, maximo 254, sin numeros.";
+        } else {
+            $sintomas = trim($_POST["sintomas"]);
+        }
+
+        // Validando diagnostico de sangre
+        if (empty (trim ($_POST["diagnostico"]))) {
+            $diagnostico_err = "Porfavor, ingrese el diagnostico.";
+        } elseif (!preg_match('/^[A-Za-z0-9,.\- ]{30,254}$/', trim($_POST['diagnostico']))) {
+            $diagnostico_err = "Se debe detallar con minimo 30 caracteres, maximo 254";
+        } else {
+            $diagnostico = trim($_POST["diagnostico"]);
+        }
+
+        // Validando medicina
+        if (empty (trim ($_POST["medicina"]))) {
+            $medicina_err = "Porfavor, ingrese las medicinas.";
+        } elseif (!preg_match('/^[A-Za-z0-9,. ]{30,100}$/', trim($_POST['medicina']))) {
+            $medicina_err = "Se debe detallar con minimo 30 caracteres, maximo 100";
+        } else {
+            $medicina = trim($_POST["medicina"]);
+        }
+
+        $costo = trim($_POST["costo"]);
+
+        // Validando rayos
+        if (empty (trim ($_POST["rayos"]))) {
+            $rayos_err = "Porfavor, ingrese un archivo.";
+        } else {
+            $rayos = trimm($_POST["rayos"]);
+        }
+
+        // Definiendo las ids del perro
         $id_perro = $_SESSION["perro_id"];
         $id = $_SESSION["id"];
 
-        // Consulta SQL para agregar la mascota
-        $sql = "INSERT INTO perroconsultado (id_perro, id_user, sintomas, rayosx, prueba_sangre, medicina, costo) ";
-        $sql .= "VALUES ('$id_perro', '$id', '$v1', '$v2', '$v3', '$v4', '$v5')";
-        
-        // Resultado en caso de error
-        if (!(mysqli_query($db, $sql))) {
-            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-        } else {
-            $sql2 = "UPDATE perro SET consulta = 1 WHERE id = ".$id_perro;
-            mysqli_query($db, $sql2);
-            echo $sql2;
+        // Determinar errores en los inputs antes de entrar en la base de datos
+        if(empty($sintomas_err) && empty($diagnostico_err) && empty($medicina_err) && 
+            empty($rayos_err) && empty($costo_err)){
+            
+            // Preparando la declaración INSERT
+            $sql = "INSERT INTO perro_consulta (id_perro, id_user, sintomas, rayosx, prueba_sangre, medicina, costo) ";
+            $sql .= "VALUES (?,?,?,?,?,?,?)";
+             
+            if($stmt = mysqli_prepare($db, $sql)){
+                // Vincular variables a la declaración preparada como parámetros
+                mysqli_stmt_bind_param($stmt, "sssssss", $param_id_perro, $param_id, $param_sintomas, $param_rayos, $param_diagnostico, $param_medicina, $param_costo);
+                
+                // Declarar parametros
+                $param_id_perro = $id_perro;
+                $param_id = $id;
+                $param_sintomas = $sintomas;
+                $param_rayos = $rayos;
+                $param_diagnostico = $diagnostico;
+                $param_medicina = $medicina;
+                $param_costo = $costo;
+                
+                // Definiciones al ejecutar la declaración preparadas
+                if(mysqli_stmt_execute($stmt)){
+                    // Estableciendo el perro consultado
+                    $sql2 = "UPDATE perro SET consulta = 1 WHERE id = ".$id_perro;
+                    mysqli_query($db, $sql2);
+
+                    // Redirigiendo
+                    header("location: homedoctor.php");
+                } else{
+                    echo "Algo salio mal, Intentalo luego.";
+                }
+    
+                // Cerra declaracion
+                mysqli_stmt_close($stmt);
+            }
         }
-        
         // Close conexión
         mysqli_close($db);
     }
@@ -53,39 +111,69 @@
             </h3>
         </div>
         <div class="card-body">
-            <form id="form-consulta" class="form-group" action="atender-perro.php" method="POST">                        
+            <form action = "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" id="form-consulta" class="form-group" method="POST">                        
                 <label class="form-label">Sintomas:</label>
-                <textarea class="form-control" id="sintomas" name="sintomas" rows="3" placeholder="Escriba los sintomas..."></textarea>  
+                <textarea 
+                    id="sintomas" 
+                    name="sintomas" 
+                    rows="3" 
+                    class="form-control <?php echo (!empty($sintomas_err)) ? 'is-invalid' : ''; ?>" 
+                    placeholder="Escriba los sintomas"><?php echo trim($sintomas); ?></textarea>
+                <span class="invalid-feedback">
+                    <?php echo $sintomas_err; ?>
+                </span>
                 
                 <label class="form-label mt-3">Rayos X:</label>
-                <input id="rayos" name= "rayos" type = "file" class="form-control">
+                <input 
+                    value="<?php echo $rayos; ?>" 
+                    id="rayos" 
+                    name= "rayos" 
+                    type = "file" 
+                    class="form-control <?php echo (!empty($rayos_err)) ? 'is-invalid' : ''; ?>"
+                    accept="application/pdf">
+                <span class="invalid-feedback">
+                    <?php echo $rayos_err; ?>
+                </span>
                         
                 <label class="form-label mt-3">Diagnostico de Sangre:</label> 
-                <textarea class="form-control" id="diagnostico" name="diagnostico" rows="2" placeholder="Escriba el diagnostico..."></textarea> 
+                <textarea 
+                    id="diagnostico" 
+                    name="diagnostico" 
+                    rows="2" 
+                    type = "text"
+                    class="form-control <?php echo (!empty($diagnostico_err)) ? 'is-invalid' : ''; ?>" 
+                    placeholder="Escriba el diagnostico"><?php echo trim($diagnostico); ?></textarea> 
+                <span class="invalid-feedback">
+                    <?php echo $diagnostico_err; ?>
+                </span>
                         
                 <label class="form-label mt-3">Medicinas:</label>
-                <input id="medicina" name="medicina" type="text" class="form-control" placeholder="Escribe las medicinas">
-                
+                <input 
+                    value="<?php echo $medicina; ?>" 
+                    id="medicina" 
+                    name="medicina" 
+                    type="text" 
+                    class="form-control <?php echo (!empty($medicina_err)) ? 'is-invalid' : ''; ?>" 
+                    placeholder="Escribe las medicinas">
+                <span class="invalid-feedback">
+                    <?php echo $medicina_err; ?>
+                </span>
+
                 <label class="form-label mt-3">Costo de la consulta:</label> 
-                <input id="costo" class="form-control" name="costo" type="number" placeholder="Escriba el costo en soles">
+                <input 
+                    value="<?php echo $costo; ?>"
+                    id="costo" 
+                    name="costo" 
+                    type="number" 
+                    class="form-control" 
+                    placeholder="Escriba el costo en soles.">
             
                 <div class = "botones mt-3">        
-                    <!-- <div class="boton">
-                        <input class="btn btn-lg btn-primary" name= "Registrar" type = Submit value = "Registrar">
-                    </div> -->
-                    <div>
-                        <button id="boton-atender" type="button" class="btn btn-primary">
-                            Atender
-                        </button>
-                    </div>
-                    <div>
-                        <button id="boton-cancelar" type="button" class="btn btn-secondary ml-3">
-                            Cancelar
-                        </button>
-                    </div>
+                    <input class="btn btn-primary ml-3" type = "submit" value = "Atender Perro">
+                    <button id="boton-cancelar" type="button" class="btn btn-secondary ml-3">
+                        Cancelar
+                    </button>
                 </div>    
-
-                <div class="response"></div>
             </form>
         </div>
     </div>

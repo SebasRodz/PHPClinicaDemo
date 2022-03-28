@@ -18,13 +18,16 @@
     <div class="card border-primary mb-3" style="width: 60%; height:auto; margin:0 auto; margin-top:1%">
         <div class="card-header">
             <h3 style="text-align: center;">
-                Atencion de perro de nombre: <?php echo htmlspecialchars($_SESSION["perro_nombre"]); ?>
+                Comprobar consulta de perro: <?php echo htmlspecialchars($_SESSION["perro_nombre"]); ?>
             </h3>
         </div>
         <div id="table" class="card-body"></div>
         <div class = "botones mt-2 mb-3">
-            <button id="boton-cancelar" type="button" class="btn btn-secondary ml-3">
-                Volver
+            <button value = "<?php echo htmlspecialchars($_SESSION["perro_id"]); ?>" id="boton-aceptar" type="button" class="btn btn-primary ml-3">
+                Aceptar
+            </button>
+            <button id="boton-cancelar" type="button" class="btn btn-danger ml-3">
+                Cancelar
             </button>
         </div>
     </div>
@@ -33,6 +36,6 @@
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous">
     </script>
-    <script src="script-consulta.js"></script>
+    <script src="script-comprobar.js"></script>
 </body>
 </html>
