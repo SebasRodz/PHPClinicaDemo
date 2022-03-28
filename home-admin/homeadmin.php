@@ -28,12 +28,22 @@
     </header>
     <div class="card mb-3">
         <h3 class="card-header">
-            Bienvenido otra vez, <?php echo htmlspecialchars($_SESSION["username"]); ?>. 
+            Bienvenido otra vez, administrador <?php echo htmlspecialchars($_SESSION["username"]); ?>. 
         </h3>
     </div>
-    <button>
-        <a href="../logout.php">Volver</a>
-    </button>
+    <div class="card mb-3 mt-3" style="width: 90%; margin:0 auto;">
+        <h4 class="card-header" style="text-align: center;">
+            Lista total de perros
+        </h4>
+        <div class = "card-body">
+            <div id = "grid-triple" class = "grid-triple"></div>
+            <div class = "botones mt-3">
+                <button id="cerrar-sesion" type="button" class="btn btn-danger ml-3">
+                    Cerrar Sesión
+                </button>
+            </div> 
+        </div>
+    </div>
     <script
 		src="https://code.jquery.com/jquery-3.6.0.js"
 		integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="

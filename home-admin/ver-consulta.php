@@ -5,13 +5,13 @@
     // Conexión a la base de datos
     include("../connection.php");
     
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $id = $_POST["id"];
+    if ($_SERVER["REQUEST_METHOD"] == "GET") {
+        $id = $_SESSION["perro_id"];
 
         // Validando credenciales
         if(!empty($id)){
-            // Preparando la consulta DELETE
-            $sql = "DELETE FROM perro WHERE id = ".$id;
+            // Preparando la consulta SELECT
+            $sql = "SELECT sintomas, rayosx, prueba_sangre, medicina, costo FROM perroconsultado WHERE id_perro = ".$id;
             
             if($stmt = mysqli_prepare($db, $sql)){
                 // Intento de ejecutar la declaración preparada
@@ -23,16 +23,12 @@
                         
                         if(mysqli_stmt_fetch($stmt)){
                             $result = mysqli_query($db, $sql);
-                            
-                            if(!$result) {
-                                echo "Error: " . $sql . "<br>" . mysqli_error($db);
-                            } else {
+                            $ouput = array();
 
-                                $sql2 = "DELETE FROM perroconsultado WHERE id = ".$id;
-                                mysqli_query($db, $sql2);
-
-                                echo 'Se elimino a la mascota';
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                $output[] = $row;
                             }
+                            echo json_encode($output);
                         } else{
                             echo false;
                         }
@@ -46,5 +42,7 @@
             // Cierra la declaracion
             mysqli_stmt_close($stmt);
         }
+        // Close conexión
+        mysqli_close($db);
     }
 ?>
