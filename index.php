@@ -1,4 +1,5 @@
 <?php
+ini_set( 'session.cookie_httponly', 1 );
 // Iniciando la sesión
 session_start();
  
@@ -130,7 +131,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     <h3>Inicio de Sesión</h3>
                 </div>
                 <div class = "card-body">
-                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="form-group" method = "post">
+                    <form action="index.php" class="form-group" method = "post">
                         <label class="form-label">Usuario:</label>
                         <input 
                             name="username" 

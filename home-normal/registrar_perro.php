@@ -1,9 +1,10 @@
 <?php
+    ini_set( 'session.cookie_httponly', 1 );
     // Iniciando la sesión
     session_start();
 
     // Conenctando a la base de datos
-    include("../connection.php");
+    include __DIR__."/../connection.php";
 
     //Definiendo variables
     $nombre = $fecha = $imagen = "";
@@ -94,7 +95,7 @@
             <h3 style="text-align: center;">Registro de Perro</h3>
         </div>
         <div class="card-body">
-            <form action = "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" id="form-ingreso" class="form-group" method="POST">                        
+            <form action = "registrar_perro.php" id="form-ingreso" class="form-group" method="POST">                        
                 <label class="form-label">Ingresar Nombre:</label>
                 <input 
                     value="<?php echo $nombre; ?>" 

@@ -1,4 +1,5 @@
 <?php
+    ini_set( 'session.cookie_httponly', 1 );
     // Inicializando la sesión
     session_start();
 ?>

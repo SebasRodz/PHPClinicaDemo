@@ -1,9 +1,10 @@
 <?php
+    ini_set( 'session.cookie_httponly', 1 );
     // Inicializando la sesión
     session_start();
 
     // Conexión a la base de datos
-    include("../connection.php");
+    include __DIR__."/../connection.php";
     
     // Revisa si un usuario esta logueado, siendo el caso, lo redirige al login
     if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){

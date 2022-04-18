@@ -1,9 +1,10 @@
 <?php
+    ini_set( 'session.cookie_httponly', 1 );
     // Iniciando la sesión
     session_start();
 
     // Conenctando a la base de datos
-    include("../connection.php");
+    include __DIR__."/../connection.php";
 
     //Definiendo variables
     $sintomas = $diagnostico = $medicina = $rayos = "";
@@ -111,7 +112,7 @@
             </h3>
         </div>
         <div class="card-body">
-            <form action = "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" id="form-consulta" class="form-group" method="POST">                        
+            <form action = "atender-perro.php" id="form-consulta" class="form-group" method="POST">                        
                 <label class="form-label">Sintomas:</label>
                 <textarea 
                     id="sintomas" 

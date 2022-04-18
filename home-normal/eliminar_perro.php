@@ -1,9 +1,10 @@
 <?php
+    ini_set( 'session.cookie_httponly', 1 );
     // Inicializando la sesión
     session_start();
 
     // Conexión a la base de datos
-    include("../connection.php");
+    include __DIR__."/../connection.php";
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id = $_POST["id"];

@@ -114,7 +114,7 @@
                     <h3>Registro</h3>
                 </div>
                 <div class = "card-body">
-                    <form action = "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" id = "form-login" class="form-group" method = "post">
+                    <form action = "registro.php" id = "form-login" class="form-group" method = "post">
                         
                         <label class="form-label mt-3">Usuario:</label>
                         <input 
