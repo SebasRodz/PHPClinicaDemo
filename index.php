@@ -15,7 +15,7 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
             header("location: home-normal/home.php");
             break;
         default:
-            header("login.php");
+            header("index.php");
             break;
     }
 }
@@ -87,7 +87,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                                     header("location: home-normal/home.php");
                                     break;
                                 default:
-                                    header("login.php");
+                                    header("index.php");
                                     break;
                             }
                             

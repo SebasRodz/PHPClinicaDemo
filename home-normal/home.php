@@ -7,7 +7,7 @@
     
     // Revisa si un usuario esta logueado, siendo el caso, lo redirige al login
     if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-        header("location: ../login.php");
+        header("location: ../index.php");
         exit;
     }
 ?>

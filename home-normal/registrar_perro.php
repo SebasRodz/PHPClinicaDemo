@@ -62,7 +62,7 @@
                 
                 // Definiciones al ejecutar la declaración preparadas
                 if(mysqli_stmt_execute($stmt)){
-                    // Redirect to login page
+                    // Redirect to home page
                     header("location: home.php");
                 } else{
                     echo "Algo salio mal, Intentalo luego.";

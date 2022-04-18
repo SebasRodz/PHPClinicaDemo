@@ -84,7 +84,7 @@
                 // Definiciones al ejecutar la declaración preparadas
                 if(mysqli_stmt_execute($stmt)){
                     // Redirect to login page
-                    header("location: login.php");
+                    header("location: index.php");
                 } else{
                     echo "Algo salio mal, Intentalo luego.";
                 }
@@ -154,7 +154,7 @@
                         </div>
                         
                         <div class="response">
-                            <small class="smalling form-text text-muted mt-2">¿Ya tiene cuenta? <a href="login.php">Logueate</a></small>
+                            <small class="smalling form-text text-muted mt-2">¿Ya tiene cuenta? <a href="index.php">Logueate</a></small>
                         </div>
                     </form>
                 </div>
