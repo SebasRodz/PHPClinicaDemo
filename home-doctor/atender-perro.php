@@ -43,7 +43,7 @@
         if (empty (trim ($_POST["rayos"]))) {
             $rayos_err = "Porfavor, ingrese un archivo.";
         } else {
-            $rayos = trimm($_POST["rayos"]);
+            $rayos = trim($_POST["rayos"]);
         }
 
         // Definiendo las ids del perro
